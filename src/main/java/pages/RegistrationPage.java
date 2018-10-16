@@ -1,10 +1,12 @@
 package pages;
 
+import io.qameta.allure.Step;
 import model.Account;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import utils.Log;
 
 /**
  * Created by ПК on 21.09.2018.
@@ -17,33 +19,14 @@ public class RegistrationPage {
         this.driver = driver;
     }
 
-    private final Account account = new Account.AccountBuilder()
-            .withGender("Ms.")
-            .withFirstCustomerName("Test1")
-            .withLastCustomerName("Test2")
-            .withEmail("")
-            .withPass("fdasfd")
-            .withDay("3")
-            .withMonth("4")
-            .withYear("1985")
-            .withFirstName("Test1")
-            .withLastName("Test2")
-            .withCountry("")
-            .withCompany("")
-            .withAddress1("adress1")
-            .withAddress2("adress2")
-            .withCity("Kyiv")
-            .withState("Alabama")
-            .withPostcode("11111")
-            .withCountry("United States")
-            .withPhone_mobile("+8052635289")
-            .withAlias("alias")
-            .create();
 
     private void selectGender(String gender) {
-        if (gender.equals("Ms.")) {
+        Log.LOG.debug("Select gender: " + gender);
+        if (gender.equals("Mr.")) {
+            Log.LOG.debug("Selecting gender : Mr. ");
             driver.findElement(By.id("id_gender1")).click();
         } else {
+            Log.LOG.debug("Selecting gender : Mrs. ");
             driver.findElement(By.id("id_gender2")).click();
         }
     }
@@ -58,7 +41,11 @@ public class RegistrationPage {
     }
 
     private void typeEmail(String email) {
-        driver.findElement(By.id("email")).sendKeys(email);
+        WebElement emailFiled = driver.findElement(By.id("email"));
+        if (emailFiled.getText().equals("")) {
+            emailFiled.clear();
+            emailFiled.sendKeys(email);
+        }
     }
 
     private void typePassword(String pass) {
@@ -139,11 +126,18 @@ public class RegistrationPage {
         driver.findElement(By.id("alias")).sendKeys(alias);
     }
 
+    @Step
     public void clickRegister() {
-        driver.findElement(By.id("submitAccount")).click();
+
+        WebElement element = driver.findElement(By.id("submitAccount"));
+        Log.LOG.info("Clicking on registeration");
+        element.click();
+
     }
 
+
     public void fillRegistrationForm(Account account) {
+
         selectGender(account.getGender());
         typeCustomerFirstName(account.getFirstCustomerName());
         typeCustomerLastName(account.getLastCustomerName());
@@ -161,9 +155,5 @@ public class RegistrationPage {
         selectCountry(account.getCountry());
         typePhoneMobile(account.getPhone_mobile());
         typeAlias(account.getAlias());
-    }
-
-    public Account getAccount() {
-        return account;
     }
 }

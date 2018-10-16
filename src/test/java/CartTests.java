@@ -1,11 +1,17 @@
+import io.qameta.allure.Description;
+import model.Account;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.testng.TestListenerAdapter;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import pages.CreateAccountPage;
 import pages.NavigationPage;
 import pages.RegistrationPage;
+
+import javax.inject.Inject;
 
 /**
  * Created by ПК on 22.02.2018.
@@ -18,29 +24,59 @@ import pages.RegistrationPage;
  * <p>
  * Проверить сумма покупки товара отобраажтеся  $ 29,00
  */
-public class CartTests  extends BaseTest {
 
-    private CreateAccountPage createAccountPage ;
+@Listeners(TestListenerAdapter.class)
+public class CartTests extends BaseTest {
+
+    @Inject
+    private CreateAccountPage createAccountPage;
+    @Inject
     private RegistrationPage registrationPage;
+    @Inject
     private NavigationPage navigationPage;
+    @Inject
+    private MainPage mainPage;
 
-    @Test
+    @Test(groups = {"smoke","regression"})
+    @Description("Test Description: Login test with wrong username and wrong password.")
     public void verifyRegistrationNewAccount() {
-        navigationPage = new NavigationPage(driver);
+        Account account = new Account.AccountBuilder()
+                .withGender("Ms.")
+                .withFirstCustomerName("Jack")
+                .withLastCustomerName("Daniels")
+                .withEmail("Jack.Daniels@gmail.com")
+                .withPass("Jack.Daniels")
+                .withDay("3")
+                .withMonth("4")
+                .withYear("1985")
+                .withFirstName("Jack")
+                .withLastName("Daniels")
+                .withCountry("")
+                .withCompany("")
+                .withAddress1("adress1")
+                .withAddress2("adress2")
+                .withCity("Kyiv")
+                .withState("Alabama")
+                .withPostcode("11111")
+                .withCountry("United States")
+                .withPhone_mobile("+8052635289")
+                .withAlias("alias")
+                .create();
         navigationPage.openSignInPage();
-        createAccountPage = new CreateAccountPage(driver);
-        createAccountPage.inputEmail("fdasfasd@fdafsd.com");
+        createAccountPage.typeEmail("Jack.Daniels@gmail.com");
         createAccountPage.clickCreateAccount();
-        registrationPage= new RegistrationPage(driver);
-        registrationPage.fillRegistrationForm(registrationPage.getAccount());
+        registrationPage.fillRegistrationForm(account);
         registrationPage.clickRegister();
     }
 
+    @Test
+    public void test1() {
+        mainPage.searchItem("Blouse");
+        mainPage.pressSubmit();
+        mainPage.switchToListView();
+        navigationPage.openSignInPage();
 
-
-    @AfterMethod (alwaysRun = true)
-    public void closeDown() {
-        driver.manage().deleteAllCookies();
-        driver.close();
     }
+
+
 }

@@ -30,10 +30,10 @@ public class Test {
 
         String name = "Анна";   // Имя
         Integer age = 21;           // Возраст
-        System.out.println("Меня зовут " + name + ", мне " + age + " лет");
+        System.LOG.println("Меня зовут " + name + ", мне " + age + " лет");
 
         String approve = (age > 18) ? "нельзя" : "можно";
-        System.out.println("Мне " + approve + " пить пиво");*/
+        System.LOG.println("Мне " + approve + " пить пиво");*/
 
     }
 }
